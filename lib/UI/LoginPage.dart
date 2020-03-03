@@ -3,21 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in_app/device_info/DeviceInformation.dart';
 import 'package:google_sign_in_app/fireBase/signInGoogle.dart';
 
+import 'ListData.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String mDeviceDetails;
-
-  updateDeivceInfo() async {
-    setState(() {
-      DeviceInformation().getDeviceDetails().then((value) {
-        mDeviceDetails = value.toString();
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +24,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FlutterLogo(size: 100),
-              _signInButton(),
-              _deviceDetails()
+              _signInButton(context),
             ],
           ),
         ),
@@ -40,12 +32,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _signInButton() {
+  Widget _signInButton(BuildContext context) {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
 //        signInWithGoogle();
-//        updateDeivceInfo();
+      launchNextScreen(context);
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
@@ -70,23 +62,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _deviceDetails() {
-    return GestureDetector(
-      onTap: updateDeivceInfo,
-      child: Text(
-        mDeviceDetails != null
-            ? "Device Details: \n$mDeviceDetails"
-            : "Device Details:",
-        style: TextStyle(fontSize: 21, color: Colors.indigo),
-        softWrap: true,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+  }
+
+  void launchNextScreen(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ListData()),);
   }
 }
