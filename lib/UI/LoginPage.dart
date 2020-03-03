@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in_app/device_info/DeviceInformation.dart';
 import 'package:google_sign_in_app/fireBase/signInGoogle.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,6 +9,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String mDeviceDetails;
+
+  updateDeivceInfo() async {
+    setState(() {
+      DeviceInformation().getDeviceDetails().then((value) {
+        mDeviceDetails = value.toString();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -19,9 +30,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterLogo(size: 150),
-              SizedBox(height: 150),
+              FlutterLogo(size: 100),
               _signInButton(),
+              _deviceDetails()
             ],
           ),
         ),
@@ -33,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-        signInWithGoogle();
-//      signInWithEmailPassword("dinesh.r@dreamOrbit.com", "Audi@bmw089");
+//        signInWithGoogle();
+//        updateDeivceInfo();
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
@@ -50,12 +61,32 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Text(
-              "Sign in with Google",
+              "Sign in",
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
           )
         ],
       ),
     );
+  }
+
+  Widget _deviceDetails() {
+    return GestureDetector(
+      onTap: updateDeivceInfo,
+      child: Text(
+        mDeviceDetails != null
+            ? "Device Details: \n$mDeviceDetails"
+            : "Device Details:",
+        style: TextStyle(fontSize: 21, color: Colors.indigo),
+        softWrap: true,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
