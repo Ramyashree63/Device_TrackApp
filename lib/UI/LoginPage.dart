@@ -69,6 +69,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void launchNextScreen(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ListData()),);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ListData()),);
   }
 }
