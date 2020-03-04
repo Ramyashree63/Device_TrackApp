@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in_app/device_info/DeviceInformation.dart';
-import 'package:google_sign_in_app/fireBase/signInGoogle.dart';
-
-import 'ListData.dart';
-
+import 'package:flutter/services.dart';
+import 'ListOfDeviceDetails.dart';
+import 'dart:io' show Platform;
+import 'package:device_info/device_info.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +34,8 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
 //        signInWithGoogle();
-      launchNextScreen(context);
+        launchNextScreen(context);
+        startServiceInPlatform();
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
@@ -69,6 +67,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void launchNextScreen(BuildContext context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ListData()),);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ListOfDeviceDetails()),
+    );
+  }
+
+  void startServiceInPlatform()async{
+    if(Platform.isAndroid){
+      var methodChannel = MethodChannel("com.example.google_sign_in_app");
+      String data = await methodChannel.invokeMethod("startService");
+      debugPrint(data);
+      print("service started and battery level = $data");
+    } else if(Platform.isIOS){
+
+    }
   }
 }
