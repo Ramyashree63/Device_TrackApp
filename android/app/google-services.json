@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "991496673915",
+    "firebase_url": "https://final-app-afe24.firebaseio.com",
+    "project_id": "final-app-afe24",
+    "storage_bucket": "final-app-afe24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991496673915:android:0b2990fbde1738b2e7e0de",
+        "android_client_info": {
+          "package_name": "device.track.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991496673915-vjf4l1l5j4tsuslfci4kvd1dkloqhrru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFxOu9bl_NQb2szxtYGRTQeZ9-rK-7qek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991496673915-vjf4l1l5j4tsuslfci4kvd1dkloqhrru.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991496673915-tjd3m5smvpvdmvbg0kch04f8972hl2g1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.finalApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
