@@ -15,7 +15,7 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.cyan,
+        color: Colors.black12,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -31,7 +31,7 @@ class LoginPageState extends State<LoginPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          DeviceInformation().getDeviceDetails(DeviceInformation.USER_ACTIVE);
+                          DeviceInformation().getDeviceDetails(DeviceInformation.USER_STATUS);
                           return FirstScreen();
                         },
                       ),
@@ -41,7 +41,7 @@ class LoginPageState extends State<LoginPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
                 highlightElevation: 0,
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: BorderSide(color: Colors.black54),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(

@@ -1,4 +1,5 @@
 import 'package:final_app/device_info/DeviceInformation.dart';
+import 'package:final_app/model/DeviceDataModel.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/UI/login_in.dart';
@@ -17,13 +18,30 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   String mDeviceDetails;
+  List<DeviceDataModel> mDeviceDataList = [];
 
-  updateDeivceInfo() async {
-    setState(() {
-      DeviceInformation()
-          .getDeviceDetails(FirstScreen.USER_ACTIVE)
-          .then((value) {
-        mDeviceDetails = value.toString();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+    databaseReference.child("Android").once().then((DataSnapshot snapShot) {
+      var keys = snapShot.value.keys;
+      var data = snapShot.value;
+      mDeviceDataList.clear();
+      for (var key in keys) {
+        mDeviceDataList.add(new DeviceDataModel(
+            data[key]["operatingSystem"],
+            data[key]["sdkVersion"],
+            data[key]["manufacturer"],
+            data[key]["model"],
+            data[key]["batteryLevel"],
+            data[key]["isActive"],
+            data[key]["time"],
+            data[key]["userName"]));
+      }
+      setState(() {
+        print("Length : ${mDeviceDataList.length}");
       });
     });
   }
@@ -40,8 +58,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 color: Colors.white,
               ),
               onPressed: () {
-                DeviceInformation()
-                    .getDeviceDetails(FirstScreen.USER_ACTIVE);
+                DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
               }),
           FlatButton(
             textColor: Colors.white,
@@ -60,49 +77,73 @@ class _FirstScreenState extends State<FirstScreen> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.blue[100], Colors.blue[400]],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              SizedBox(height: 40),
-              Text(
-                mDeviceDetails != null
-                    ? "Device Details: \n$mDeviceDetails"
-                    : "Device Details:",
-                style: TextStyle(fontSize: 21, color: Colors.indigo),
-                softWrap: true,
-                textAlign: TextAlign.justify,
-              ),
-/*              RaisedButton(
-                onPressed: () {
-                  signOutGoogle();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                    return LoginPage();
-                  }), ModalRoute.withName('/'));
+        child: mDeviceDataList.length == 0
+            ? Text("No Data is Available")
+            : ListView.builder(
+                itemBuilder: (_, index) {
+                  return listUI(
+                    mDeviceDataList[index].operatingSystem,
+                    mDeviceDataList[index].sdkVersion,
+                    mDeviceDataList[index].manufacturer,
+                    mDeviceDataList[index].model,
+                    mDeviceDataList[index].batteryLevel,
+                    mDeviceDataList[index].isActive,
+                    mDeviceDataList[index].time,
+                    mDeviceDataList[index].userName,
+                  );
                 },
-                color: Colors.deepPurple,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sign Out',
-                    style: TextStyle(fontSize: 25, color: Colors.white),
-                  ),
-                ),
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-              )*/
-            ],
-          ),
+                itemCount: mDeviceDataList.length),
+      ),
+    );
+  }
+
+  Widget listUI(
+      String operatingSystem,
+      String sdkVersion,
+      String manufacturer,
+      String model,
+      String batteryLevel,
+      String isActive,
+      String time,
+      String userName) {
+    return Card(
+      elevation: 10.0,
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("OPERATING_SYSTEM : $operatingSystem",
+                style: TextStyle(fontSize: 18.0)),
+            Text(
+              "VERSION : $sdkVersion",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "MANUFACTURER : $manufacturer",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "MODEL : $model",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "BATTERY_LEVEL : $batteryLevel",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "USER_STATUS : $isActive",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "TIME : $time",
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              "USER_NAME : $userName",
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ],
         ),
       ),
     );
@@ -120,5 +161,4 @@ class _FirstScreenState extends State<FirstScreen> {
       }
     } else if (Platform.isIOS) {}
   }
-
 }

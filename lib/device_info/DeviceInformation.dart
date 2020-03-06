@@ -7,14 +7,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class DeviceInformation {
-  static const OPERATING_SYSTEM = "Operating System";
-  static const VERSION = "DeviceSDKVersion";
-  static const MANUFACTURER = "DeviceManufacturerName";
-  static const MODEL = "DeviceModel";
-  static const BATTERY_LEVEL = "Battery Level";
-  static const USER_ACTIVE = "active";
-  static const USER_IN_ACTIVE = "in active";
+  static const OPERATING_SYSTEM = "operatingSystem";
+  static const VERSION = "sdkVersion";
+  static const MANUFACTURER = "manufacturer";
+  static const MODEL = "model";
+  static const BATTERY_LEVEL = "batteryLevel";
+  static const USER_STATUS = "isActive";
   static const TIME = "time";
+  static const USER_NAME = "userName";
   String mDeviceOperatingSystem;
   String mDeviceSDKVersion;
   String mDeviceManufacturerName;
@@ -31,7 +31,7 @@ class DeviceInformation {
     mDateTime = time.toString();
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
-      mDeviceOperatingSystem = androidInfo.version.release;
+      mDeviceOperatingSystem = "Android "+androidInfo.version.release;
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
@@ -45,8 +45,9 @@ class DeviceInformation {
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
         BATTERY_LEVEL: mBatteryLevel,
-        USER_ACTIVE: isUserActive,
-        TIME: mDateTime
+        USER_STATUS: isUserActive,
+        TIME: mDateTime,
+        USER_NAME: "user name"
       });
 /*      print(
           'Android: $mDeviceOperatingSystem (\nSDK: $mDeviceSDKVersion), (\nManufaturer: $mDeviceManufacturerName) (\nModel: $mDeviceModel)');*/
@@ -64,8 +65,9 @@ class DeviceInformation {
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
         BATTERY_LEVEL: mBatteryLevel,
-        USER_ACTIVE: isUserActive,
-        TIME: mDateTime
+        USER_STATUS: isUserActive,
+        TIME: mDateTime,
+        USER_NAME: "user name"
       });
       /*print(
           '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel');*/
