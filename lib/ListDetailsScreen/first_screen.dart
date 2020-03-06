@@ -4,9 +4,12 @@ import 'package:final_app/UI/login_in.dart';
 import 'package:final_app/FireBase/sign_in.dart';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
-import 'package:device_info/device_info.dart';
+
 
 class FirstScreen extends StatefulWidget {
+  static const USER_ACTIVE ="active";
+  static const USER_IN_ACTIVE ="in active";
+  static const LOG_OUT ="LOG OUT";
   @override
   _FirstScreenState createState() => _FirstScreenState();
 }
@@ -16,7 +19,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   updateDeivceInfo() async {
     setState(() {
-      DeviceInformation().getDeviceDetails().then((value) {
+      DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE).then((value) {
         mDeviceDetails = value.toString();
       });
     });
@@ -36,9 +39,10 @@ class _FirstScreenState extends State<FirstScreen> {
               onPressed: updateDeivceInfo),
           FlatButton(
             textColor: Colors.white,
-            child: Text("LOG OUT"),
+            child: Text(FirstScreen.LOG_OUT),
             onPressed: () {
               signOutGoogle();
+              DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
                 return LoginPage();
