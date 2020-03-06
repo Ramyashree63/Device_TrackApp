@@ -1,3 +1,4 @@
+import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/FireBase/sign_in.dart';
 import 'package:final_app/ListDetailsScreen/first_screen.dart';
@@ -30,6 +31,7 @@ class LoginPageState extends State<LoginPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
+                          DeviceInformation().getDeviceDetails(DeviceInformation.USER_ACTIVE);
                           return FirstScreen();
                         },
                       ),

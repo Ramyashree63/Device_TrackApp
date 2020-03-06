@@ -1,15 +1,16 @@
 import 'package:final_app/device_info/DeviceInformation.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/UI/login_in.dart';
 import 'package:final_app/FireBase/sign_in.dart';
 import 'package:flutter/services.dart';
-import 'dart:io' show Platform;
-
+import 'dart:io' show Platform, sleep;
 
 class FirstScreen extends StatefulWidget {
-  static const USER_ACTIVE ="active";
-  static const USER_IN_ACTIVE ="in active";
-  static const LOG_OUT ="LOG OUT";
+  static const USER_ACTIVE = "active";
+  static const USER_IN_ACTIVE = "in active";
+  static const LOG_OUT = "LOG OUT";
+
   @override
   _FirstScreenState createState() => _FirstScreenState();
 }
@@ -19,7 +20,9 @@ class _FirstScreenState extends State<FirstScreen> {
 
   updateDeivceInfo() async {
     setState(() {
-      DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE).then((value) {
+      DeviceInformation()
+          .getDeviceDetails(FirstScreen.USER_ACTIVE)
+          .then((value) {
         mDeviceDetails = value.toString();
       });
     });
@@ -36,7 +39,10 @@ class _FirstScreenState extends State<FirstScreen> {
                 Icons.refresh,
                 color: Colors.white,
               ),
-              onPressed: updateDeivceInfo),
+              onPressed: () {
+                DeviceInformation()
+                    .getDeviceDetails(FirstScreen.USER_ACTIVE);
+              }),
           FlatButton(
             textColor: Colors.white,
             child: Text(FirstScreen.LOG_OUT),
@@ -114,4 +120,5 @@ class _FirstScreenState extends State<FirstScreen> {
       }
     } else if (Platform.isIOS) {}
   }
+
 }

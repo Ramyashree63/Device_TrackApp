@@ -1,7 +1,9 @@
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, sleep;
+import 'dart:math';
 import 'package:battery/battery.dart';
 
 import 'package:device_info/device_info.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class DeviceInformation {
@@ -12,6 +14,7 @@ class DeviceInformation {
   static const BATTERY_LEVEL = "Battery Level";
   static const USER_ACTIVE = "active";
   static const USER_IN_ACTIVE = "in active";
+  static const TIME = "time";
   String mDeviceOperatingSystem;
   String mDeviceSDKVersion;
   String mDeviceManufacturerName;
@@ -19,28 +22,35 @@ class DeviceInformation {
   String mDateTime;
   final dataBaseReferance = FirebaseDatabase.instance.reference();
   final Battery battery = Battery();
+  var mBatteryLevel;
 
   Future<String> getDeviceDetails(String isUserActive) async {
-    var mBatteryLvel = await battery.batteryLevel;
-    mDateTime = DateTime.now().toString();
+    mBatteryLevel = await battery.batteryLevel;
+    DateTime time = DateTime.now();
+    String utcTime = time.millisecondsSinceEpoch.toString();
+    mDateTime = time.toString();
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       mDeviceOperatingSystem = androidInfo.version.release;
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
-
-      dataBaseReferance.child(mDateTime + "_user").set({
+      FirebaseDatabase.instance
+          .reference()
+          .child("Android")
+          .child(utcTime)
+          .set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
-        BATTERY_LEVEL: mBatteryLvel,
-        USER_ACTIVE: isUserActive
+        BATTERY_LEVEL: mBatteryLevel,
+        USER_ACTIVE: isUserActive,
+        TIME: mDateTime
       });
 /*      print(
           'Android: $mDeviceOperatingSystem (\nSDK: $mDeviceSDKVersion), (\nManufaturer: $mDeviceManufacturerName) (\nModel: $mDeviceModel)');*/
-      return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLvel';
+      return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLevel';
     } else if (Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
       mDeviceOperatingSystem = iosInfo.systemName;
@@ -48,17 +58,18 @@ class DeviceInformation {
       mDeviceManufacturerName = iosInfo.name;
       mDeviceModel = iosInfo.model;
 
-      dataBaseReferance.child(mDateTime + "_user").set({
+      dataBaseReferance.child("IOS").child(utcTime).set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
-        BATTERY_LEVEL: mBatteryLvel,
-        USER_ACTIVE: isUserActive
+        BATTERY_LEVEL: mBatteryLevel,
+        USER_ACTIVE: isUserActive,
+        TIME: mDateTime
       });
       /*print(
           '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel');*/
-      return '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel $mBatteryLvel';
+      return '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel $mBatteryLevel';
     }
     return "";
   }
