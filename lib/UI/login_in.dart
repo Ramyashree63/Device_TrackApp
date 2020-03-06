@@ -25,16 +25,16 @@ class LoginPageState extends State<LoginPage> {
               OutlineButton(
                 splashColor: Colors.grey,
                 onPressed: () {
-                  signInWithGoogle().whenComplete(() {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return FirstScreen();
-                        },
-                      ),
-                    );
-                  });
+//                  signInWithGoogle().whenComplete(() {
+//                    Navigator.push(
+//                      context,
+//                      MaterialPageRoute(
+//                        builder: (context) {
+//                          return FirstScreen();
+//                        },
+//                      ),
+//                    );
+//                  });
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
