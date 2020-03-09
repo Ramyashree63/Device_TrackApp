@@ -31,7 +31,7 @@ class LoginPageState extends State<LoginPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          DeviceInformation().getDeviceDetails(DeviceInformation.USER_STATUS);
+                          DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
                           return FirstScreen();
                         },
                       ),

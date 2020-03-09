@@ -24,6 +24,7 @@ class _FirstScreenState extends State<FirstScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
     databaseReference.child("Android").once().then((DataSnapshot snapShot) {
       var keys = snapShot.value.keys;
@@ -102,13 +103,14 @@ class _FirstScreenState extends State<FirstScreen> {
       String sdkVersion,
       String manufacturer,
       String model,
-      String batteryLevel,
+      int batteryLevel,
       String isActive,
       String time,
       String userName) {
     return Card(
       elevation: 10.0,
       child: Container(
+        color: isActive== FirstScreen.USER_ACTIVE?Colors.green:Colors.red,
         padding: EdgeInsets.all(20.0),
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
