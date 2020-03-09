@@ -1,3 +1,4 @@
+import 'package:final_app/Utilities/NetworkUtill.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/FireBase/sign_in.dart';
@@ -26,17 +27,7 @@ class LoginPageState extends State<LoginPage> {
               OutlineButton(
                 splashColor: Colors.grey,
                 onPressed: () {
-                  signInWithGoogle().whenComplete(() {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
-                          return FirstScreen();
-                        },
-                      ),
-                    );
-                  });
+                  _googleSignIn(context);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
@@ -48,7 +39,9 @@ class LoginPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                       Image(image: AssetImage("assets/images/google_logo.png"), height: 20.0),
+                      Image(
+                          image: AssetImage("assets/images/google_logo.png"),
+                          height: 20.0),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
@@ -69,5 +62,24 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
 
+  void _googleSignIn(BuildContext context) {
+    NetworkUtill.ConnectivityCheck(context).then((isConncted) {
+      if (isConncted != null && isConncted) {
+        signInWithGoogle().whenComplete(() {
+          DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return FirstScreen();
+                },
+              ),
+            );
+          });
+        });
+      }
+    });
+  }
+}

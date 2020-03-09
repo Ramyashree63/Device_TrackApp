@@ -1,3 +1,4 @@
+import 'package:final_app/Utilities/NetworkUtill.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:final_app/model/DeviceDataModel.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,9 +25,8 @@ class _FirstScreenState extends State<FirstScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
     DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
-    databaseReference.child("Android").once().then((DataSnapshot snapShot) {
+    databaseReference.child("Device_Info").once().then((DataSnapshot snapShot) {
       var keys = snapShot.value.keys;
       var data = snapShot.value;
       mDeviceDataList.clear();
@@ -41,6 +41,8 @@ class _FirstScreenState extends State<FirstScreen> {
             data[key]["time"],
             data[key]["userName"]));
       }
+      mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
+//      mDeviceDataList.reversed;
       setState(() {
         print("Length : ${mDeviceDataList.length}");
       });
@@ -65,13 +67,7 @@ class _FirstScreenState extends State<FirstScreen> {
             textColor: Colors.white,
             child: Text(FirstScreen.LOG_OUT),
             onPressed: () {
-              signOutGoogle();
-              DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) {
-                return LoginPage();
-              }), ModalRoute.withName('/'));
-              stopService(context);
+              _logOut(context);
             },
             shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
           )
@@ -108,9 +104,11 @@ class _FirstScreenState extends State<FirstScreen> {
       String time,
       String userName) {
     return Card(
+      color: isActive == FirstScreen.USER_ACTIVE ? Colors.green : Colors.red,
       elevation: 10.0,
+      semanticContainer: true,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
-        color: isActive== FirstScreen.USER_ACTIVE?Colors.green:Colors.red,
         padding: EdgeInsets.all(20.0),
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +141,7 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
             Text(
               "USER_NAME : $userName",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -162,5 +160,19 @@ class _FirstScreenState extends State<FirstScreen> {
         );
       }
     } else if (Platform.isIOS) {}
+  }
+
+  void _logOut(BuildContext context) {
+    NetworkUtill.ConnectivityCheck(context).then((isConncted) {
+      if (isConncted != null && isConncted) {
+        signOutGoogle();
+        DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return LoginPage();
+        }), ModalRoute.withName('/'));
+        stopService(context);
+      }
+    });
   }
 }

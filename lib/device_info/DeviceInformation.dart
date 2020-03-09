@@ -20,24 +20,23 @@ class DeviceInformation {
   String mDeviceManufacturerName;
   String mDeviceModel;
   String mDateTime;
-  final dataBaseReferance = FirebaseDatabase.instance.reference();
   final Battery battery = Battery();
   var mBatteryLevel;
 
   Future<String> getDeviceDetails(String isUserActive) async {
+    final dataBaseReferance = FirebaseDatabase.instance.reference();
     mBatteryLevel = await battery.batteryLevel;
     DateTime time = DateTime.now();
     String utcTime = time.millisecondsSinceEpoch.toString();
     mDateTime = time.toString();
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
-      mDeviceOperatingSystem = "Android "+androidInfo.version.release;
+      mDeviceOperatingSystem = "Android: " + androidInfo.version.release;
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
-      FirebaseDatabase.instance
-          .reference()
-          .child("Android")
+      dataBaseReferance
+          .child("Device_Info")
           .child(utcTime)
           .set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
@@ -59,8 +58,8 @@ class DeviceInformation {
       mDeviceManufacturerName = iosInfo.name;
       mDeviceModel = iosInfo.model;
 
-      dataBaseReferance.child("IOS").child(utcTime).set({
-        OPERATING_SYSTEM: mDeviceOperatingSystem,
+      dataBaseReferance.child("Device_Info").child(utcTime).set({
+        OPERATING_SYSTEM: "IOS:" + mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
