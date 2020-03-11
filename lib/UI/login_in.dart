@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:final_app/Utilities/NetworkUtill.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/FireBase/sign_in.dart';
 import 'package:final_app/ListDetailsScreen/first_screen.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -67,6 +70,7 @@ class LoginPageState extends State<LoginPage> {
     NetworkUtill.ConnectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
         signInWithGoogle().whenComplete(() {
+          startServiceInPlatform();
           DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
           Future.delayed(const Duration(milliseconds: 500), () {
             Navigator.pushReplacement(
@@ -81,5 +85,16 @@ class LoginPageState extends State<LoginPage> {
         });
       }
     });
+  }
+
+  void startServiceInPlatform()async{
+    if(Platform.isAndroid){
+      var methodChannel = MethodChannel("com.example.google_sign_in_app");
+      String data = await methodChannel.invokeMethod("startService");
+      debugPrint(data);
+      print("service started and battery level = $data");
+    } else if(Platform.isIOS){
+
+    }
   }
 }
