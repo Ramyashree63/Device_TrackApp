@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:battery/battery.dart';
 
 import 'package:device_info/device_info.dart';
+import 'package:final_app/ListDetailsScreen/first_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -35,10 +36,7 @@ class DeviceInformation {
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
-      dataBaseReferance
-          .child("Device_Info")
-          .child(utcTime)
-          .set({
+      dataBaseReferance.child(FirstScreen.DEVICE_INFO).child(androidInfo.androidId).set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
@@ -48,8 +46,6 @@ class DeviceInformation {
         TIME: mDateTime,
         USER_NAME: "user name"
       });
-/*      print(
-          'Android: $mDeviceOperatingSystem (\nSDK: $mDeviceSDKVersion), (\nManufaturer: $mDeviceManufacturerName) (\nModel: $mDeviceModel)');*/
       return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLevel';
     } else if (Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
@@ -58,8 +54,11 @@ class DeviceInformation {
       mDeviceManufacturerName = iosInfo.name;
       mDeviceModel = iosInfo.model;
 
-      dataBaseReferance.child("Device_Info").child(utcTime).set({
-        OPERATING_SYSTEM: "IOS:" + mDeviceOperatingSystem,
+      dataBaseReferance
+          .child(FirstScreen.DEVICE_INFO)
+          .child(iosInfo.identifierForVendor)
+          .set({
+        OPERATING_SYSTEM: "IOS: " + mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
@@ -68,8 +67,7 @@ class DeviceInformation {
         TIME: mDateTime,
         USER_NAME: "user name"
       });
-      /*print(
-          '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel');*/
+
       return '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel $mBatteryLevel';
     }
     return "";

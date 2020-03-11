@@ -12,6 +12,7 @@ class FirstScreen extends StatefulWidget {
   static const USER_ACTIVE = "active";
   static const USER_IN_ACTIVE = "in active";
   static const LOG_OUT = "LOG OUT";
+  static const DEVICE_INFO = "Device Info";
 
   @override
   _FirstScreenState createState() => _FirstScreenState();
@@ -26,7 +27,7 @@ class _FirstScreenState extends State<FirstScreen> {
     // TODO: implement initState
     super.initState();
     DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
-    databaseReference.child("Device_Info").once().then((DataSnapshot snapShot) {
+    databaseReference.child(FirstScreen.DEVICE_INFO).once().then((DataSnapshot snapShot) {
       var keys = snapShot.value.keys;
       var data = snapShot.value;
       mDeviceDataList.clear();
@@ -42,7 +43,6 @@ class _FirstScreenState extends State<FirstScreen> {
             data[key]["userName"]));
       }
       mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
-//      mDeviceDataList.reversed;
       setState(() {
         print("Length : ${mDeviceDataList.length}");
       });
