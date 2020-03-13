@@ -16,6 +16,7 @@ class DeviceInformation {
   static const USER_STATUS = "isActive";
   static const TIME = "time";
   static const USER_NAME = "userName";
+  static const DEVICE_ID = "deviceID";
   String mDeviceOperatingSystem;
   String mDeviceSDKVersion;
   String mDeviceManufacturerName;
@@ -23,7 +24,7 @@ class DeviceInformation {
   String mDateTime;
   final Battery battery = Battery();
   var mBatteryLevel;
-
+  static String deviceID;
   Future<String> getDeviceDetails(String isUserActive) async {
     final dataBaseReferance = FirebaseDatabase.instance.reference();
     mBatteryLevel = await battery.batteryLevel;
@@ -36,6 +37,7 @@ class DeviceInformation {
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
+      deviceID = androidInfo.androidId;
       dataBaseReferance
           .child(FirstScreen.DEVICE_INFO)
           .child(androidInfo.androidId)
@@ -47,7 +49,8 @@ class DeviceInformation {
         BATTERY_LEVEL: mBatteryLevel,
         USER_STATUS: isUserActive,
         TIME: mDateTime,
-        USER_NAME: "user name"
+        USER_NAME: "user name",
+        DEVICE_ID: androidInfo.androidId
       });
       return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLevel';
     } else if (Platform.isIOS) {
@@ -56,7 +59,7 @@ class DeviceInformation {
       mDeviceSDKVersion = iosInfo.systemVersion;
       mDeviceManufacturerName = iosInfo.name;
       mDeviceModel = iosInfo.model;
-
+      deviceID = iosInfo.identifierForVendor;
       dataBaseReferance
           .child(FirstScreen.DEVICE_INFO)
           .child(iosInfo.identifierForVendor)
@@ -68,7 +71,8 @@ class DeviceInformation {
         BATTERY_LEVEL: mBatteryLevel,
         USER_STATUS: isUserActive,
         TIME: mDateTime,
-        USER_NAME: "user name"
+        USER_NAME: "user name",
+        DEVICE_ID: iosInfo.identifierForVendor
       });
 
       return '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel $mBatteryLevel';

@@ -1,3 +1,4 @@
+import 'package:device_info/device_info.dart';
 import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:final_app/model/DeviceDataModel.dart';
@@ -50,7 +51,8 @@ class _FirstScreenState extends State<FirstScreen> {
             data[key]["batteryLevel"],
             data[key]["isActive"],
             data[key]["time"],
-            data[key]["userName"]));
+            data[key]["userName"],
+            data[key]["deviceID"]));
       }
       mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
       setState(() {
@@ -96,15 +98,15 @@ class _FirstScreenState extends State<FirstScreen> {
         child: ListView.builder(
             itemBuilder: (_, index) {
               return listUI(
-                mDeviceDataList[index].operatingSystem,
-                mDeviceDataList[index].sdkVersion,
-                mDeviceDataList[index].manufacturer,
-                mDeviceDataList[index].model,
-                mDeviceDataList[index].batteryLevel,
-                mDeviceDataList[index].isActive,
-                mDeviceDataList[index].time,
-                mDeviceDataList[index].userName,
-              );
+                  mDeviceDataList[index].operatingSystem,
+                  mDeviceDataList[index].sdkVersion,
+                  mDeviceDataList[index].manufacturer,
+                  mDeviceDataList[index].model,
+                  mDeviceDataList[index].batteryLevel,
+                  mDeviceDataList[index].isActive,
+                  mDeviceDataList[index].time,
+                  mDeviceDataList[index].userName,
+                  mDeviceDataList[index].deviceID);
             },
             itemCount: mDeviceDataList.length),
       ),
@@ -119,7 +121,15 @@ class _FirstScreenState extends State<FirstScreen> {
       int batteryLevel,
       String isActive,
       String time,
-      String userName) {
+      String userName,
+      String deviceID) {
+    bool isCurrentUser = true;
+    if(deviceID == DeviceInformation.deviceID){
+      isCurrentUser = false;
+    }
+    /*checkUserAvailable(deviceID).then((onValue) {
+      isCurrentUser = onValue;
+    });*/
     return Card(
       color: Colors.white,
       elevation: 10.0,
@@ -163,7 +173,7 @@ class _FirstScreenState extends State<FirstScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                isActive == FirstScreen.USER_ACTIVE
+                (isActive == FirstScreen.USER_ACTIVE && isCurrentUser)
                     ? RaisedButton(
                         color: Colors.green,
                         child: Text(FirstScreen.ASK_DEVICE),
@@ -203,6 +213,7 @@ class _FirstScreenState extends State<FirstScreen> {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
         signOutGoogle();
+        DeviceInformation.deviceID = "";
         DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
@@ -221,4 +232,26 @@ class _FirstScreenState extends State<FirstScreen> {
         DeviceInformation().getDeviceDetails("FirstScreen.USER_ACTIVE");
     }
   }
+/*
+use in future
+  Future<bool> checkUserAvailable(String deviceID) async {
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      String id = androidInfo.androidId;
+      if (id.toLowerCase() == deviceID.toLowerCase()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (Platform.isIOS) {
+      var iosInfo = await DeviceInfoPlugin().iosInfo;
+      String id = iosInfo.identifierForVendor;
+      if (id.toLowerCase() == deviceID.toLowerCase()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }*/
 }

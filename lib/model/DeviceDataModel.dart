@@ -7,6 +7,7 @@ class DeviceDataModel {
   String isActive;
   int batteryLevel;
   String userName;
+  String deviceID;
   DeviceDataModel(this.operatingSystem, this.sdkVersion, this.manufacturer,
-      this.model, this.batteryLevel, this.isActive, this.time, this.userName);
+      this.model, this.batteryLevel, this.isActive, this.time, this.userName, this.deviceID);
 }
