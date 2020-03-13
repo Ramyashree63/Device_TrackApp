@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 
 final Connectivity _connectivity = new Connectivity();
 
-class NetworkUtill {
-  static Future<bool> ConnectivityCheck(BuildContext context) async {
+class Utills {
+  static const String network_connectoin = "No network connection";
+  static const String ok = "OK";
+  static Future<bool> connectivityCheck(BuildContext context) async {
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
-      showAlertDialog(context);
+      showNetworkSnackBar(context);
       return false;
     } else if (result == ConnectivityResult.mobile ||
         result == ConnectivityResult.wifi) {
       return true;
     }
-    showAlertDialog(context);
+    showNetworkSnackBar(context);
     return false;
   }
 
@@ -31,5 +33,14 @@ class NetworkUtill {
         ],
       );
     });
+  }
+
+  static void showNetworkSnackBar(BuildContext context) {
+    final _scaffold = Scaffold.of(context);
+    _scaffold.showSnackBar(SnackBar(
+      backgroundColor: Colors.red,
+      content: Text(network_connectoin, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+    ));
   }
 }
