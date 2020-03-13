@@ -8,11 +8,14 @@ import 'package:final_app/FireBase/sign_in.dart';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform, sleep;
 
+import 'package:flutter/widgets.dart';
+
 class FirstScreen extends StatefulWidget {
   static const USER_ACTIVE = "active";
   static const USER_IN_ACTIVE = "in active";
   static const LOG_OUT = "LOG OUT";
   static const DEVICE_INFO = "Device Info";
+  static const ASK_DEVICE = "Ask for device";
 
   @override
   _FirstScreenState createState() => _FirstScreenState();
@@ -63,39 +66,34 @@ class _FirstScreenState extends State<FirstScreen> {
         title: Text("Device Info"),
         actions: <Widget>[
           Builder(
-            builder: (context) =>
-                IconButton(
-                    icon: Icon(
-                      Icons.refresh,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Utills.connectivityCheck(context).then((isConncted) {
-                        if (isConncted != null && isConncted) {
-                          DeviceInformation().getDeviceDetails(
-                              FirstScreen.USER_ACTIVE);
-                        }
-                      });
-                          }),
+            builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Utills.connectivityCheck(context).then((isConncted) {
+                    if (isConncted != null && isConncted) {
+                      DeviceInformation()
+                          .getDeviceDetails(FirstScreen.USER_ACTIVE);
+                    }
+                  });
+                }),
           ),
           Builder(
-            builder: (context) =>
-                FlatButton(
-                  textColor: Colors.white,
-                  child: Text(FirstScreen.LOG_OUT),
-                  onPressed: () {
-                    _logOut(context);
-                  },
-                  shape: CircleBorder(
-                      side: BorderSide(color: Colors.transparent)),
-                ),
+            builder: (context) => FlatButton(
+              textColor: Colors.white,
+              child: Text(FirstScreen.LOG_OUT),
+              onPressed: () {
+                _logOut(context);
+              },
+              shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            ),
           ),
         ],
       ),
       body: Container(
-        child: mDeviceDataList.length == 0
-            ? Text("No Data is Available")
-            : ListView.builder(
+        child: ListView.builder(
             itemBuilder: (_, index) {
               return listUI(
                 mDeviceDataList[index].operatingSystem,
@@ -113,7 +111,8 @@ class _FirstScreenState extends State<FirstScreen> {
     );
   }
 
-  Widget listUI(String operatingSystem,
+  Widget listUI(
+      String operatingSystem,
       String sdkVersion,
       String manufacturer,
       String model,
@@ -122,7 +121,7 @@ class _FirstScreenState extends State<FirstScreen> {
       String time,
       String userName) {
     return Card(
-      color: isActive == FirstScreen.USER_ACTIVE ? Colors.green : Colors.red,
+      color: Colors.white,
       elevation: 10.0,
       semanticContainer: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -132,35 +131,55 @@ class _FirstScreenState extends State<FirstScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text("OPERATING_SYSTEM : $operatingSystem",
-                style: TextStyle(fontSize: 18.0)),
+                style: TextStyle(fontSize: 16.0)),
             Text(
               "VERSION : $sdkVersion",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "MANUFACTURER : $manufacturer",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "MODEL : $model",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "BATTERY_LEVEL : $batteryLevel",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "USER_STATUS : $isActive",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "TIME : $time",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
             Text(
               "USER_NAME : $userName",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                isActive == FirstScreen.USER_ACTIVE
+                    ? RaisedButton(
+                        color: Colors.green,
+                        child: Text(FirstScreen.ASK_DEVICE),
+                        splashColor: Colors.tealAccent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        onPressed: () {},
+                      )
+                    : RaisedButton(
+                        child: Text(FirstScreen.ASK_DEVICE),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))))
+              ],
+            )
           ],
         ),
       ),
@@ -187,8 +206,8 @@ class _FirstScreenState extends State<FirstScreen> {
         DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-              return LoginPage();
-            }), ModalRoute.withName('/'));
+          return LoginPage();
+        }), ModalRoute.withName('/'));
         stopService(context);
       }
     });
