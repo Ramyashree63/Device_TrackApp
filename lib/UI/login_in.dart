@@ -9,6 +9,8 @@ class LoginPage extends StatefulWidget {
   }
 }
 
+String _email;
+
 class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
@@ -25,16 +27,7 @@ class LoginPageState extends State<LoginPage> {
               OutlineButton(
                 splashColor: Colors.grey,
                 onPressed: () {
-                  signInWithGoogle().whenComplete(() {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return FirstScreen();
-                        },
-                      ),
-                    );
-                  });
+                  email_validate(context);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
@@ -69,3 +62,40 @@ class LoginPageState extends State<LoginPage> {
   }
 }
 
+Future <void> email_validate(BuildContext context){
+  signInWithGoogle().then((value) {
+    _email = value.email;
+    print(_email);
+    if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@dreamorbit.com").hasMatch(_email)){
+      ackAlert(context);
+      signOutGoogle();
+      clearCache();
+      print("Enter an valid Email Address!!");
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+        return FirstScreen();
+      },),);
+    }
+  });
+}
+
+Future<void> ackAlert(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Invalid Email!!'),
+        content: const Text('Please enter a valid Email Address!!'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              email_validate(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

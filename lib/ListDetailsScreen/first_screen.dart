@@ -1,4 +1,4 @@
-import 'package:final_app/device_info/DeviceInformation.dart';
+//import 'package:final_app/device_info_DeviceInformation.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/UI/login_in.dart';
 import 'package:final_app/FireBase/sign_in.dart';
@@ -19,9 +19,9 @@ class _FirstScreenState extends State<FirstScreen> {
 
   updateDeivceInfo() async {
     setState(() {
-      DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE).then((value) {
-        mDeviceDetails = value.toString();
-      });
+//      DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE).then((value) {
+//        mDeviceDetails = value.toString();
+//      });
     });
   }
 
@@ -41,8 +41,8 @@ class _FirstScreenState extends State<FirstScreen> {
             textColor: Colors.white,
             child: Text(FirstScreen.LOG_OUT),
             onPressed: () {
-              signOutGoogle();
-              DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
+              //signOutGoogle();
+              //DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
                 return LoginPage();
@@ -75,13 +75,14 @@ class _FirstScreenState extends State<FirstScreen> {
                 softWrap: true,
                 textAlign: TextAlign.justify,
               ),
-/*              RaisedButton(
+              RaisedButton(
                 onPressed: () {
                   signOutGoogle();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                    return LoginPage();
-                  }), ModalRoute.withName('/'));
+                   clearCache();
+//                  Navigator.of(context).pushAndRemoveUntil(
+//                      MaterialPageRoute(builder: (context) {
+//                    return LoginPage();
+//                  }), ModalRoute.withName('/'));
                 },
                 color: Colors.deepPurple,
                 child: Padding(
@@ -94,7 +95,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 elevation: 5,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
-              )*/
+              )
             ],
           ),
         ),
