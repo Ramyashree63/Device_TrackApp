@@ -36,7 +36,10 @@ class DeviceInformation {
       mDeviceSDKVersion = androidInfo.version.sdkInt.toString();
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
-      dataBaseReferance.child(FirstScreen.DEVICE_INFO).child(androidInfo.androidId).set({
+      dataBaseReferance
+          .child(FirstScreen.DEVICE_INFO)
+          .child(androidInfo.androidId)
+          .set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,

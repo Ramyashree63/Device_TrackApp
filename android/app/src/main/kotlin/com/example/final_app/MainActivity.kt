@@ -17,24 +17,34 @@ class MainActivityNew : FlutterActivity() {
     private var mService: Intent? = null;
     private val mStartService = "startService"
     private val mStopService = "stopService"
+    private val CHANNEL_NAME: String = "com.example.google_sign_in_app"
+    val mHandler = android.os.Handler()
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.google_sign_in_app")
-                .setMethodCallHandler { call, result ->
-                    if (call.method == mStartService) {
-                        startService()
-                        result.success(" $mStartService= ${getBatteryInfo()}")
-                    } else if(call.method == mStopService){
-                        stopService()
-                        result.success("stopService")
-                    }
+        val method_channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_NAME)
+        method_channel.setMethodCallHandler { call, result ->
+            if (call.method == mStartService) {
+                startService()
+                result.success(" $mStartService= ${getBatteryInfo()}")
+            } else if (call.method == mStopService) {
+                stopService()
+                result.success("stopService")
+            }
+        }
+        /*mHandler.apply() {
+            val runnable = object : java.lang.Runnable {
+                override fun run() {
+                    method_channel.invokeMethod("didRecieveTranscript", "utterance")
                 }
+            }
+            postDelayed(runnable, 2500)
+        }*/
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.mService = Intent(this, MyService()::class.java)
-
     }
 
     fun getBatteryInfo(): Int {
@@ -46,7 +56,6 @@ class MainActivityNew : FlutterActivity() {
             val intent = ContextWrapper(applicationContext).registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             batteryLevel = intent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100 / intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         }
-
 //        Toast.makeText(context, "Battery level $batteryLevel", Toast.LENGTH_LONG).show()
         return batteryLevel
     }

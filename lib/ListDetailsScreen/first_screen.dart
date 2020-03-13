@@ -1,4 +1,4 @@
-import 'package:final_app/Utilities/NetworkUtill.dart';
+import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:final_app/model/DeviceDataModel.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -26,8 +26,15 @@ class _FirstScreenState extends State<FirstScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    const channelName = 'com.example.google_sign_in_app';
+    var methodChannel = MethodChannel(channelName);
+    methodChannel.setMethodCallHandler(this.didRecieveTranscript);
+
     DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
-    databaseReference.child(FirstScreen.DEVICE_INFO).once().then((DataSnapshot snapShot) {
+    databaseReference
+        .child(FirstScreen.DEVICE_INFO)
+        .once()
+        .then((DataSnapshot snapShot) {
       var keys = snapShot.value.keys;
       var data = snapShot.value;
       mDeviceDataList.clear();
@@ -55,47 +62,58 @@ class _FirstScreenState extends State<FirstScreen> {
       appBar: AppBar(
         title: Text("Device Info"),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
-              }),
-          FlatButton(
-            textColor: Colors.white,
-            child: Text(FirstScreen.LOG_OUT),
-            onPressed: () {
-              _logOut(context);
-            },
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-          )
+          Builder(
+            builder: (context) =>
+                IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Utills.connectivityCheck(context).then((isConncted) {
+                        if (isConncted != null && isConncted) {
+                          DeviceInformation().getDeviceDetails(
+                              FirstScreen.USER_ACTIVE);
+                        }
+                      });
+                          }),
+          ),
+          Builder(
+            builder: (context) =>
+                FlatButton(
+                  textColor: Colors.white,
+                  child: Text(FirstScreen.LOG_OUT),
+                  onPressed: () {
+                    _logOut(context);
+                  },
+                  shape: CircleBorder(
+                      side: BorderSide(color: Colors.transparent)),
+                ),
+          ),
         ],
       ),
       body: Container(
         child: mDeviceDataList.length == 0
             ? Text("No Data is Available")
             : ListView.builder(
-                itemBuilder: (_, index) {
-                  return listUI(
-                    mDeviceDataList[index].operatingSystem,
-                    mDeviceDataList[index].sdkVersion,
-                    mDeviceDataList[index].manufacturer,
-                    mDeviceDataList[index].model,
-                    mDeviceDataList[index].batteryLevel,
-                    mDeviceDataList[index].isActive,
-                    mDeviceDataList[index].time,
-                    mDeviceDataList[index].userName,
-                  );
-                },
-                itemCount: mDeviceDataList.length),
+            itemBuilder: (_, index) {
+              return listUI(
+                mDeviceDataList[index].operatingSystem,
+                mDeviceDataList[index].sdkVersion,
+                mDeviceDataList[index].manufacturer,
+                mDeviceDataList[index].model,
+                mDeviceDataList[index].batteryLevel,
+                mDeviceDataList[index].isActive,
+                mDeviceDataList[index].time,
+                mDeviceDataList[index].userName,
+              );
+            },
+            itemCount: mDeviceDataList.length),
       ),
     );
   }
 
-  Widget listUI(
-      String operatingSystem,
+  Widget listUI(String operatingSystem,
       String sdkVersion,
       String manufacturer,
       String model,
@@ -163,16 +181,25 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void _logOut(BuildContext context) {
-    NetworkUtill.ConnectivityCheck(context).then((isConncted) {
+    Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
         signOutGoogle();
         DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-          return LoginPage();
-        }), ModalRoute.withName('/'));
+              return LoginPage();
+            }), ModalRoute.withName('/'));
         stopService(context);
       }
     });
+  }
+
+  Future<void> didRecieveTranscript(MethodCall call) async {
+    // type inference will work here avoiding an explicit cast
+    final String utterance = call.arguments;
+    switch (call.method) {
+      case "didRecieveTranscript":
+        DeviceInformation().getDeviceDetails("FirstScreen.USER_ACTIVE");
+    }
   }
 }
