@@ -1,8 +1,6 @@
-import 'package:device_info/device_info.dart';
 import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:final_app/model/DeviceDataModel.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/UI/login_in.dart';
 import 'package:final_app/FireBase/sign_in.dart';
@@ -213,6 +211,7 @@ class _FirstScreenState extends State<FirstScreen> {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
         signOutGoogle();
+        clearCache();
         DeviceInformation.deviceID = "";
         DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
         Navigator.of(context).pushAndRemoveUntil(
