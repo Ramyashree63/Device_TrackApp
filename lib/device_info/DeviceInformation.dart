@@ -28,7 +28,11 @@ class DeviceInformation {
   static String userName;
   Future<String> getDeviceDetails(String isUserActive) async {
     final dataBaseReferance = FirebaseDatabase.instance.reference();
-    mBatteryLevel = await battery.batteryLevel;
+    try {
+      mBatteryLevel = await battery.batteryLevel;
+    }catch(e){
+      print('Fetching battery level in iOS_Simulator ${e}');
+    }
     DateTime time = DateTime.now();
     String utcTime = time.millisecondsSinceEpoch.toString();
     mDateTime = time.toString();
