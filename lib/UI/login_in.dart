@@ -33,8 +33,6 @@ class LoginPageState extends State<LoginPage> {
                 OutlineButton(
                   splashColor: Colors.grey,
                   onPressed: () {
-//                    _googleSignIn(context);
-                    clearCache();
                     emailValidate(context);
                   },
                   shape: RoundedRectangleBorder(
@@ -72,27 +70,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _googleSignIn(BuildContext context) {
-    Utills.connectivityCheck(context).then((isConncted) {
-      if (isConncted != null && isConncted) {
-        signInWithGoogle().whenComplete(() {
-          startServiceInPlatform();
-          DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
-          Future.delayed(const Duration(milliseconds: 500), () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return FirstScreen();
-                },
-              ),
-            );
-          });
-        });
-      }
-    });
-  }
-
   void startServiceInPlatform() async {
     if (Platform.isAndroid) {
       var methodChannel = MethodChannel("com.example.google_sign_in_app");
@@ -106,15 +83,17 @@ class LoginPageState extends State<LoginPage> {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
         signInWithGoogle().then((value) {
-          _email = value.email;
+          if (value != null && value.email != null) {
+            _email = value.email;
+          } else {
+            invalidateCache();
+            return;
+          }
           print(_email);
           if (!RegExp(
                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@dreamorbit.com")
               .hasMatch(_email)) {
-            ackAlert(context);
-            signOutGoogle();
-            clearCache();
-            print("Enter an valid Email Address!!");
+            invalidateCache();
           } else {
             Navigator.pushReplacement(
               context,
@@ -151,5 +130,12 @@ class LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  void invalidateCache() {
+    ackAlert(context);
+    signOutGoogle();
+    clearCache();
+    print("Enter an valid Email Address!!");
   }
 }

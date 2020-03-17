@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:991496673915:android:0b2990fbde1738b2e7e0de",
+        "mobilesdk_app_id": "1:991496673915:android:7dbb9604c9847e6be7e0de",
         "android_client_info": {
-          "package_name": "device.track.app"
+          "package_name": "com.example.final_app"
         }
       },
       "oauth_client": [
@@ -28,14 +28,14 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "991496673915-vjf4l1l5j4tsuslfci4kvd1dkloqhrru.apps.googleusercontent.com",
+              "client_id": "991496673915-m1p7b64nv5bvr915hl4m4pahk8rnegn0.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "991496673915-tjd3m5smvpvdmvbg0kch04f8972hl2g1.apps.googleusercontent.com",
+              "client_id": "991496673915-gig6pk4k1tmmtoaa8c4quop3s5cu4quv.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.finalApp"
+                "bundle_id": "com.deviceTracking.finalApp"
               }
             }
           ]
