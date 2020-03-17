@@ -82,6 +82,7 @@ class LoginPageState extends State<LoginPage> {
   Future<void> emailValidate(BuildContext context) {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
+        DeviceInformation.userName = "";
         signInWithGoogle().then((value) {
           if (value != null && value.email != null) {
             _email = value.email;
@@ -100,6 +101,7 @@ class LoginPageState extends State<LoginPage> {
               MaterialPageRoute(
                 builder: (context) {
                   startServiceInPlatform();
+                  DeviceInformation.userName = value.displayName;
                   DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
                   return FirstScreen();
                 },

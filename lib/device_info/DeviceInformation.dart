@@ -25,6 +25,7 @@ class DeviceInformation {
   final Battery battery = Battery();
   var mBatteryLevel;
   static String deviceID;
+  static String userName;
   Future<String> getDeviceDetails(String isUserActive) async {
     final dataBaseReferance = FirebaseDatabase.instance.reference();
     mBatteryLevel = await battery.batteryLevel;
@@ -49,7 +50,7 @@ class DeviceInformation {
         BATTERY_LEVEL: mBatteryLevel,
         USER_STATUS: isUserActive,
         TIME: mDateTime,
-        USER_NAME: "user name",
+        USER_NAME: userName,
         DEVICE_ID: androidInfo.androidId
       });
       return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLevel';
@@ -64,14 +65,14 @@ class DeviceInformation {
           .child(FirstScreen.DEVICE_INFO)
           .child(iosInfo.identifierForVendor)
           .set({
-        OPERATING_SYSTEM: "IOS: " + mDeviceOperatingSystem,
+        OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
         MANUFACTURER: mDeviceManufacturerName,
         MODEL: mDeviceModel,
         BATTERY_LEVEL: mBatteryLevel,
         USER_STATUS: isUserActive,
         TIME: mDateTime,
-        USER_NAME: "user name",
+        USER_NAME: userName,
         DEVICE_ID: iosInfo.identifierForVendor
       });
 
