@@ -7,6 +7,8 @@ import 'package:final_app/FireBase/sign_in.dart';
 import 'package:final_app/ListDetailsScreen/first_screen.dart';
 import 'package:flutter/services.dart';
 
+import '../main.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -102,7 +104,7 @@ class LoginPageState extends State<LoginPage> {
                 builder: (context) {
                   startServiceInPlatform();
                   DeviceInformation.userName = value.displayName;
-                  DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE);
+                  MyApp.isUserLoggedIn = true;
                   return FirstScreen();
                 },
               ),

@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: LoginPage()
+      home:  LoginPage(),
     );
   }
 }
@@ -28,8 +28,7 @@ until: () => Future.delayed(Duration(seconds: 5)),
 
 class MyHomePage extends StatefulWidget {
   @override
-  _MyHomePageState createState()=> _MyHomePageState();
-
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -39,7 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(
         child: FlareActor(
-          "assets/images/splash.flr",
+//          "assets/images/splash.flr",
+          "assets/images/Teddy.flr",
           fit: BoxFit.fill,
           alignment: Alignment.center,
           animation: "idle",

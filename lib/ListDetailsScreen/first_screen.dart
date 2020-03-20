@@ -1,7 +1,9 @@
 import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
+import 'package:final_app/main.dart';
 import 'package:final_app/model/DeviceDataModel.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:final_app/UI/login_in.dart';
 import 'package:final_app/FireBase/sign_in.dart';
@@ -22,7 +24,8 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  String mDeviceDetails;
+  String mDeviceTocken;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   List<DeviceDataModel> mDeviceDataList = [];
 
   @override
@@ -33,6 +36,7 @@ class _FirstScreenState extends State<FirstScreen> {
     var methodChannel = MethodChannel(channelName);
     methodChannel.setMethodCallHandler(this.didRecieveTranscript);
 
+    firebaseMessagingInitialize();
     DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
     databaseReference
         .child(FirstScreen.DEVICE_INFO)
@@ -51,7 +55,9 @@ class _FirstScreenState extends State<FirstScreen> {
             data[key]["isActive"],
             data[key]["time"],
             data[key]["userName"],
-            data[key]["deviceID"]));
+            data[key]["deviceID"],
+            data[key]["token"]
+        ));
       }
       mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
       setState(() {
@@ -75,8 +81,8 @@ class _FirstScreenState extends State<FirstScreen> {
                 onPressed: () {
                   Utills.connectivityCheck(context).then((isConncted) {
                     if (isConncted != null && isConncted) {
-                      DeviceInformation()
-                          .getDeviceDetails(FirstScreen.USER_ACTIVE);
+                      DeviceInformation().getDeviceDetails(
+                          FirstScreen.USER_ACTIVE, mDeviceTocken);
                     }
                   });
                 }),
@@ -123,7 +129,7 @@ class _FirstScreenState extends State<FirstScreen> {
       String userName,
       String deviceID) {
     bool isCurrentUser = true;
-    if(deviceID == DeviceInformation.deviceID){
+    if (deviceID == DeviceInformation.deviceID) {
       isCurrentUser = false;
     }
     /*checkUserAvailable(deviceID).then((onValue) {
@@ -211,10 +217,12 @@ class _FirstScreenState extends State<FirstScreen> {
   void _logOut(BuildContext context) {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
+        MyApp.isUserLoggedIn = false;
         signOutGoogle();
         clearCache();
         DeviceInformation.deviceID = "";
-        DeviceInformation().getDeviceDetails(FirstScreen.USER_IN_ACTIVE);
+        DeviceInformation()
+            .getDeviceDetails(FirstScreen.USER_IN_ACTIVE, mDeviceTocken);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return LoginPage();
@@ -229,8 +237,27 @@ class _FirstScreenState extends State<FirstScreen> {
     final String utterance = call.arguments;
     switch (call.method) {
       case "didRecieveTranscript":
-        DeviceInformation().getDeviceDetails("FirstScreen.USER_ACTIVE");
+        DeviceInformation()
+            .getDeviceDetails("FirstScreen.USER_ACTIVE", mDeviceTocken);
     }
+  }
+
+  void firebaseMessagingInitialize() {
+    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      print("on Message  $message");
+    }, onResume: (Map<String, dynamic> message) {
+      print("on Message  $message");
+    }, onLaunch: (Map<String, dynamic> message) {
+      print("on Message  $message");
+    });
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.getToken().then((token) {
+      mDeviceTocken = token;
+      print("token $token");
+      DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE, token);
+    });
   }
 /*
 use in future

@@ -17,6 +17,7 @@ class DeviceInformation {
   static const TIME = "time";
   static const USER_NAME = "userName";
   static const DEVICE_ID = "deviceID";
+  static const DEVICE_TOKEN = "token";
   String mDeviceOperatingSystem;
   String mDeviceSDKVersion;
   String mDeviceManufacturerName;
@@ -26,16 +27,18 @@ class DeviceInformation {
   var mBatteryLevel;
   static String deviceID;
   static String userName;
-  Future<String> getDeviceDetails(String isUserActive) async {
+
+  Future<String> getDeviceDetails(String isUserActive, String token) async {
     final dataBaseReferance = FirebaseDatabase.instance.reference();
     try {
       mBatteryLevel = await battery.batteryLevel;
-    }catch(e){
+    } catch (e) {
       print('Fetching battery level in iOS_Simulator ${e}');
     }
     DateTime time = DateTime.now();
     String utcTime = time.millisecondsSinceEpoch.toString();
     mDateTime = time.toString();
+    String mTocken;
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       mDeviceOperatingSystem = "Android: " + androidInfo.version.release;
@@ -43,6 +46,9 @@ class DeviceInformation {
       mDeviceManufacturerName = androidInfo.manufacturer;
       mDeviceModel = androidInfo.model;
       deviceID = androidInfo.androidId;
+      if (token != null && token.isNotEmpty) {
+        mTocken = token;
+      }
       dataBaseReferance
           .child(FirstScreen.DEVICE_INFO)
           .child(androidInfo.androidId)
@@ -55,7 +61,8 @@ class DeviceInformation {
         USER_STATUS: isUserActive,
         TIME: mDateTime,
         USER_NAME: userName,
-        DEVICE_ID: androidInfo.androidId
+        DEVICE_ID: androidInfo.androidId,
+        DEVICE_TOKEN: mTocken
       });
       return 'Android: $mDeviceOperatingSystem \nSDK: $mDeviceSDKVersion, \nManufaturer: $mDeviceManufacturerName \nModel: $mDeviceModel \nBattery Level :  $mBatteryLevel';
     } else if (Platform.isIOS) {
@@ -77,7 +84,8 @@ class DeviceInformation {
         USER_STATUS: isUserActive,
         TIME: mDateTime,
         USER_NAME: userName,
-        DEVICE_ID: iosInfo.identifierForVendor
+        DEVICE_ID: iosInfo.identifierForVendor,
+        DEVICE_TOKEN: mTocken
       });
 
       return '$mDeviceOperatingSystem $mDeviceSDKVersion, $mDeviceManufacturerName $mDeviceModel $mBatteryLevel';
