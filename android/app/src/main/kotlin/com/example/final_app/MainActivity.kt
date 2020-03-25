@@ -1,4 +1,5 @@
 package com.example.final_app;
+
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -7,11 +8,13 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.NonNull;
+import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
+import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
 
 class MainActivityNew : FlutterActivity() {
     private var mService: Intent? = null;
@@ -44,6 +47,7 @@ class MainActivityNew : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        FlutterFirebaseMessagingService.setPluginRegistrant(this)
         this.mService = Intent(this, MyService()::class.java)
     }
 

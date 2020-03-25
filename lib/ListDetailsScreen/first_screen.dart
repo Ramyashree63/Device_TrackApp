@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
 import 'package:final_app/main.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'dart:io' show Platform, sleep;
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirstScreen extends StatefulWidget {
   static const USER_ACTIVE = "active";
@@ -27,7 +29,9 @@ class _FirstScreenState extends State<FirstScreen> {
   String mDeviceTocken;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   List<DeviceDataModel> mDeviceDataList = [];
+  Firestore mFirestore = Firestore.instance;
 
+//  final List<Message> messages=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -56,8 +60,7 @@ class _FirstScreenState extends State<FirstScreen> {
             data[key]["time"],
             data[key]["userName"],
             data[key]["deviceID"],
-            data[key]["token"]
-        ));
+            data[key]["token"]));
       }
       mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
       setState(() {
@@ -111,7 +114,8 @@ class _FirstScreenState extends State<FirstScreen> {
                   mDeviceDataList[index].isActive,
                   mDeviceDataList[index].time,
                   mDeviceDataList[index].userName,
-                  mDeviceDataList[index].deviceID);
+                  mDeviceDataList[index].deviceID,
+                  mDeviceDataList[index].token);
             },
             itemCount: mDeviceDataList.length),
       ),
@@ -127,7 +131,8 @@ class _FirstScreenState extends State<FirstScreen> {
       String isActive,
       String time,
       String userName,
-      String deviceID) {
+      String deviceID,
+      String token) {
     bool isCurrentUser = true;
     if (deviceID == DeviceInformation.deviceID) {
       isCurrentUser = false;
@@ -186,7 +191,16 @@ class _FirstScreenState extends State<FirstScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(16.0))),
-                        onPressed: () {},
+                        onPressed: () {
+//                    _firebaseMessaging.onTokenRefresh.listen(sendTokenToServer);
+//                    _firebaseMessaging.getToken();
+//                    _firebaseMessaging.subscribeToTopic("sendNotification");
+                          mFirestore.collection(FirstScreen.DEVICE_INFO +
+                              "/" +
+                              deviceID +
+                              "/token" +
+                              token);
+                        },
                       )
                     : RaisedButton(
                         child: Text(FirstScreen.ASK_DEVICE),
@@ -217,7 +231,7 @@ class _FirstScreenState extends State<FirstScreen> {
   void _logOut(BuildContext context) {
     Utills.connectivityCheck(context).then((isConncted) {
       if (isConncted != null && isConncted) {
-        MyApp.isUserLoggedIn = false;
+//        MyApp.isUserLoggedIn = false;
         signOutGoogle();
         clearCache();
         DeviceInformation.deviceID = "";
@@ -245,10 +259,36 @@ class _FirstScreenState extends State<FirstScreen> {
   void firebaseMessagingInitialize() {
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print("on Message  $message");
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: ListTile(
+            title: Text(message['notification']['title']),
+            subtitle: Text(message['notification']['body']),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                DeviceInformation().getDeviceDetails(
+                    FirstScreen.USER_IN_ACTIVE, mDeviceTocken);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+      return;
     }, onResume: (Map<String, dynamic> message) {
-      print("on Message  $message");
+      print("on Reume Message  $message");
+      showFlutterNotification(
+          message['notification']['title'], message['notification']['body']);
+      return;
     }, onLaunch: (Map<String, dynamic> message) {
-      print("on Message  $message");
+      print("on Launch Message  $message");
+      showFlutterNotification(
+          message['notification']['title'], message['notification']['body']);
+      return;
     });
 
     _firebaseMessaging.requestNotificationPermissions(
@@ -259,6 +299,30 @@ class _FirstScreenState extends State<FirstScreen> {
       DeviceInformation().getDeviceDetails(FirstScreen.USER_ACTIVE, token);
     });
   }
+
+  Future<void> showFlutterNotification(String title, String body) async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        new FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: null); //onDidRecieveLocationLocation
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: null); //onSelectNotification
+
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin
+        .show(0, title, body, platformChannelSpecifics, payload: 'item id 2');
+  }
+
 /*
 use in future
   Future<bool> checkUserAvailable(String deviceID) async {
@@ -281,4 +345,8 @@ use in future
     }
     return false;
   }*/
+
+  void sendTokenToServer(String fcmToken) {
+    print("Token ${fcmToken}");
+  }
 }
