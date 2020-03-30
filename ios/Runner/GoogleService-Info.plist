@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>991496673915-tjd3m5smvpvdmvbg0kch04f8972hl2g1.apps.googleusercontent.com</string>
+	<string>991496673915-b858cf5allabph7iv45n48njmt7fg2f2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.991496673915-tjd3m5smvpvdmvbg0kch04f8972hl2g1</string>
+	<string>com.googleusercontent.apps.991496673915-b858cf5allabph7iv45n48njmt7fg2f2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>991496673915-793osgpvpk0kprk3fhb0nst3gkdknieo.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDk3eNUshwGBzbjygKoKu9unxyn0Pa2Hh8</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.finalApp</string>
+	<string>com.dreamorbit.devicetrack</string>
 	<key>PROJECT_ID</key>
 	<string>final-app-afe24</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:991496673915:ios:34e74bb44be8457ce7e0de</string>
+	<string>1:991496673915:ios:d445fc74d2c35157e7e0de</string>
 	<key>DATABASE_URL</key>
 	<string>https://final-app-afe24.firebaseio.com</string>
 </dict>

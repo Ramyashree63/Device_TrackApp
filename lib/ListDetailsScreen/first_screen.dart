@@ -195,11 +195,15 @@ class _FirstScreenState extends State<FirstScreen> {
 //                    _firebaseMessaging.onTokenRefresh.listen(sendTokenToServer);
 //                    _firebaseMessaging.getToken();
 //                    _firebaseMessaging.subscribeToTopic("sendNotification");
-                          mFirestore.collection(FirstScreen.DEVICE_INFO +
-                              "/" +
-                              deviceID +
-                              "/token" +
-                              token);
+                         try{
+                           mFirestore.collection(FirstScreen.DEVICE_INFO +
+                               "/" +
+                               deviceID +
+                               "/token" +
+                               token);
+                         }catch(e){
+                           print('Error for iOS platform notifications :${e}');
+                         }
                         },
                       )
                     : RaisedButton(
