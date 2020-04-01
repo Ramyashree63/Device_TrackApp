@@ -38,32 +38,43 @@ class LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
 //                FlutterLogo(size: 120),
+              SizedBox(height:50),
                 Text(
                   "Welcome to Device Tracker",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 52.0,
+                    fontFamily: 'Gibson',
                   ),
-                ), Text(
+                ),
+                SizedBox(height: 20),
+                Text(
                   "The best way to track your device. Let's get started!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.0,
+                    fontFamily: 'Gibson',
                   ),
                 ),
-                SizedBox(height: 30),
-                OutlineButton(
-                  splashColor: Colors.transparent,
+                SizedBox(height: 60),
+                DecoratedBox(decoration: ShapeDecoration(shape: RoundedRectangleBorder(), color: Colors.white),
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                        buttonTheme: ButtonTheme.of(context).copyWith(
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+                child: OutlineButton(
+                  splashColor: Colors.white,
                   onPressed: () {
                     emailValidate(context);
                   },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40)),
+                  shape:  RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(40.0))),
                   color: Colors.white,
                   highlightElevation: 0,
-                  borderSide: BorderSide(color: Colors.black54),
+                  borderSide: BorderSide(color: Colors.white),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Row(
@@ -72,13 +83,14 @@ class LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         Image(
                             image: AssetImage("assets/images/google_logo.png"),
-                            height: 20.0),
+                            height: 30.0),
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
                             'Sign in with Google',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
+                              fontFamily: 'Gibson',
                               color: Colors.black,
                             ),
                           ),
@@ -86,7 +98,9 @@ class LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                )
+                ),
+                ),
+                ),
               ],
             ),
           ),
