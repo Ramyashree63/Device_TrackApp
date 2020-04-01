@@ -24,21 +24,28 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Builder(
         builder: (context) => Container(
-          color: Colors.black12,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color.fromRGBO(152, 226, 254, 1), Color.fromRGBO(50, 171, 126, 1)]
+            )
+          ),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FlutterLogo(size: 120),
+//                FlutterLogo(size: 120),
                 SizedBox(height: 30),
                 OutlineButton(
-                  splashColor: Colors.grey,
+                  splashColor: Colors.transparent,
                   onPressed: () {
                     emailValidate(context);
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40)),
+                  color: Colors.white,
                   highlightElevation: 0,
                   borderSide: BorderSide(color: Colors.black54),
                   child: Padding(
@@ -56,7 +63,7 @@ class LoginPageState extends State<LoginPage> {
                             'Sign in with Google',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                           ),
                         )
