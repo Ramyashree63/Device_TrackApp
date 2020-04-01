@@ -25,18 +25,34 @@ class LoginPageState extends State<LoginPage> {
       body: Builder(
         builder: (context) => Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color.fromRGBO(152, 226, 254, 1), Color.fromRGBO(50, 171, 126, 1)]
-            )
-          ),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color.fromRGBO(152, 226, 254, 1),
+                Color.fromRGBO(50, 171, 126, 1)
+              ])),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
 //                FlutterLogo(size: 120),
+                Text(
+                  "Welcome to Device Tracker",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 52.0,
+                  ),
+                ), Text(
+                  "The best way to track your device. Let's get started!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                  ),
+                ),
                 SizedBox(height: 30),
                 OutlineButton(
                   splashColor: Colors.transparent,
