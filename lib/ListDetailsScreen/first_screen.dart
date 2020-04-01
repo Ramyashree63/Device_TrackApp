@@ -73,6 +73,16 @@ class _FirstScreenState extends State<FirstScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color.fromRGBO(152, 226, 254, 1),
+                Color.fromRGBO(50, 171, 126, 1)
+              ])),
+        ),
         title: Text("Device Info"),
         actions: <Widget>[
           Builder(
@@ -91,13 +101,12 @@ class _FirstScreenState extends State<FirstScreen> {
                 }),
           ),
           Builder(
-            builder: (context) => FlatButton(
-              textColor: Colors.white,
-              child: Text(FirstScreen.LOG_OUT),
+            builder: (context) => IconButton(
+              icon: Image.asset("assets/images/ic_logout.png"),
+              tooltip: "Log out",
               onPressed: () {
                 _logOut(context);
               },
-              shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
             ),
           ),
         ],
@@ -129,7 +138,7 @@ class _FirstScreenState extends State<FirstScreen> {
       String model,
       int batteryLevel,
       String isActive,
-      String time,
+      String dateTime,
       String userName,
       String deviceID,
       String token) {
@@ -137,56 +146,57 @@ class _FirstScreenState extends State<FirstScreen> {
     if (deviceID == DeviceInformation.deviceID) {
       isCurrentUser = false;
     }
-    /*checkUserAvailable(deviceID).then((onValue) {
-      isCurrentUser = onValue;
-    });*/
+
+    String mDate = dateTime.split(" ").first;
+    String mTime = dateTime.split(" ").last;
     return Card(
       color: Colors.white,
-      elevation: 10.0,
+      elevation: 50.0,
       semanticContainer: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(10.0),
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("OPERATING_SYSTEM : $operatingSystem",
-                style: TextStyle(fontSize: 16.0)),
-            Text(
-              "VERSION : $sdkVersion",
-              style: TextStyle(fontSize: 16.0),
+            SizedBox(
+              height: 5,
             ),
-            Text(
-              "MANUFACTURER : $manufacturer",
-              style: TextStyle(fontSize: 16.0),
+            buildingTopRowItem("$userName", "$mTime"),
+            Divider(
+              color: Colors.black,
             ),
-            Text(
-              "MODEL : $model",
-              style: TextStyle(fontSize: 16.0),
-            ),
-            Text(
-              "BATTERY_LEVEL : $batteryLevel",
-              style: TextStyle(fontSize: 16.0),
-            ),
-            Text(
-              "USER_STATUS : $isActive",
-              style: TextStyle(fontSize: 16.0),
-            ),
-            Text(
-              "TIME : $time",
-              style: TextStyle(fontSize: 16.0),
-            ),
-            Text(
-              "USER_NAME : $userName",
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            sizedBoxHeight(),
+            buildingRowItem("Operating System", "$operatingSystem"),
+            sizedBoxHeight(),
+            buildingRowItem("Version", "$sdkVersion"),
+            sizedBoxHeight(),
+            buildingRowItem("Battery Level", "$batteryLevel"),
+            sizedBoxHeight(),
+            buildingRowItem("Model", "$model"),
+            sizedBoxHeight(),
+            buildingRowItem("Manufacturer", "$manufacturer"),
+            sizedBoxHeight(),
+            buildingRowItem("User Status", "$isActive"),
+            sizedBoxHeight(),
+            buildingRowItem("Date ", "$mDate"),
+            sizedBoxHeight(),
+            Divider(
+              color: Colors.black,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 (isActive == FirstScreen.USER_ACTIVE && isCurrentUser)
-                    ? RaisedButton(
-                        color: Colors.green,
-                        child: Text(FirstScreen.ASK_DEVICE),
+                    ? RaisedButton.icon(
+                        icon: Icon(
+                          Icons.phone_iphone,
+                          color: Colors.white,
+                        ),
+                        color: Color.fromRGBO(2, 82, 151, 1),
+                        label: Text(FirstScreen.ASK_DEVICE,
+                            style:
+                                TextStyle(fontSize: 14.0, color: Colors.white)),
                         splashColor: Colors.tealAccent,
                         shape: RoundedRectangleBorder(
                             borderRadius:
@@ -196,16 +206,21 @@ class _FirstScreenState extends State<FirstScreen> {
 //                    _firebaseMessaging.getToken();
 //                    _firebaseMessaging.subscribeToTopic("sendNotification");
 
-                           mFirestore.collection(FirstScreen.DEVICE_INFO +
-                               "/" +
-                               deviceID +
-                               "/token" +
-                               token);
-                       
+                          mFirestore.collection(FirstScreen.DEVICE_INFO +
+                              "/" +
+                              deviceID +
+                              "/token" +
+                              token);
                         },
                       )
-                    : RaisedButton(
-                        child: Text(FirstScreen.ASK_DEVICE),
+                    : RaisedButton.icon(
+                        icon: Icon(
+                          Icons.phone_iphone,
+                          color: Colors.white,
+                        ),
+                        label: Text(FirstScreen.ASK_DEVICE,
+                            style:
+                                TextStyle(fontSize: 14.0, color: Colors.white)),
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(16.0))))
@@ -214,6 +229,53 @@ class _FirstScreenState extends State<FirstScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildingRowItem(String key, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text("$key :",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+        Text(" $value",
+            textAlign: TextAlign.end,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+      ],
+    );
+  }
+
+  Widget buildingTopRowItem(String key, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text("$key :",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+        RichText(
+            text: TextSpan(children: [
+          WidgetSpan(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+            child: Icon(Icons.access_time),
+          )),
+          TextSpan(
+              text: " $value",
+              style: TextStyle(
+                  fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+        ])),
+      ],
+    );
+  }
+
+  Widget sizedBoxHeight() {
+    return SizedBox(
+      height: 10,
     );
   }
 

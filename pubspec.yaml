@@ -62,6 +62,7 @@ flutter:
     - assets/images/ios_logo.png
     - assets/images/splash.flr
     - assets/images/Teddy.flr
+    - assets/images/ic_logout.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

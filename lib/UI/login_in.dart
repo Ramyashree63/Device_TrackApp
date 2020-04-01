@@ -125,7 +125,7 @@ class LoginPageState extends State<LoginPage> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  startServiceInPlatform();
+//                  startServiceInPlatform();
                   DeviceInformation.userName = value.displayName;
 //                  MyApp.isUserLoggedIn = true;
                   return FirstScreen();
