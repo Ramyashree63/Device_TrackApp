@@ -83,7 +83,13 @@ class _FirstScreenState extends State<FirstScreen> {
                 Color.fromRGBO(50, 171, 126, 1)
               ])),
         ),
-        title: Text("Device Info"),
+        title: Text(
+          "Device Info",
+          style: TextStyle(
+            fontFamily: 'Gibson',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
@@ -239,12 +245,18 @@ class _FirstScreenState extends State<FirstScreen> {
         Text("$key :",
             textAlign: TextAlign.left,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w400,
+                fontSize: 12.0,
+                color: Color.fromARGB(69, 69, 83, 1))),
         Text(" $value",
             textAlign: TextAlign.end,
             textDirection: TextDirection.rtl,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w700,
+                fontSize: 12.0,
+                color: Colors.black)),
       ],
     );
   }
@@ -256,7 +268,10 @@ class _FirstScreenState extends State<FirstScreen> {
         Text("$key :",
             textAlign: TextAlign.left,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w700,
+                fontSize: 14.0,
+                color: Colors.black)),
         RichText(
             text: TextSpan(children: [
           WidgetSpan(
@@ -267,7 +282,10 @@ class _FirstScreenState extends State<FirstScreen> {
           TextSpan(
               text: " $value",
               style: TextStyle(
-                  fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                  fontFamily: 'Gibson',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.0,
+                  color: Colors.black)),
         ])),
       ],
     );
