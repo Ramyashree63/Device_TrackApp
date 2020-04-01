@@ -24,6 +24,7 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Builder(
         builder: (context) => Container(
+          padding: EdgeInsets.fromLTRB(15, 5, 0, 0),
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -37,9 +38,8 @@ class LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-              SizedBox(height: 20),
               Image(image: AssetImage("assets/images/top_image_art.png"),
-              width: 250,height: 250),
+              width: 280,height: 280),
                 Text(
                   "Welcome to Device Tracker",
                   textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class LoginPageState extends State<LoginPage> {
                     fontWeight: FontWeight.w300
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 Text(
                   "The best way to track your device. Let's get started!",
                   textAlign: TextAlign.center,
@@ -82,6 +82,7 @@ class LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Gibson',
+                              fontWeight: FontWeight.w400,
                               color: Colors.black,
                             ),
                           ),
