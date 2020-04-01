@@ -233,7 +233,7 @@ class _FirstScreenState extends State<FirstScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text("$key :",
+        Text("$key ",
             textAlign: TextAlign.left,
             style: TextStyle(
                 fontFamily: 'Gibson',
@@ -256,7 +256,7 @@ class _FirstScreenState extends State<FirstScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text("$key :",
+        Text("$key ",
             textAlign: TextAlign.left,
             style: TextStyle(
                 fontFamily: 'Gibson',

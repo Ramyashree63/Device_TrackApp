@@ -64,13 +64,12 @@ flutter:
     - assets/images/top_image_art.png
     - assets/images/top_image_art@2x.png
     - assets/images/top_image_art@3x.png
-
     - assets/images/ic_clock.png
     - assets/images/ic_mobile.png
     - assets/images/ic_refresh.png
-#    - assets/images/top_image_art.png
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+#   - assets/images/top_image_art.png
+#   - images/a_dot_burr.jpeg
+#   - images/a_dot_ham.jpeg
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware.

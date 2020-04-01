@@ -47,6 +47,7 @@ class LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     fontSize: 52.0,
                     fontFamily: 'Gibson',
+                    fontWeight: FontWeight.w300
                   ),
                 ),
                 SizedBox(height: 20),
@@ -57,6 +58,7 @@ class LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     fontSize: 14.0,
                     fontFamily: 'Gibson',
+                      fontWeight: FontWeight.w400
                   ),
                 ),
                 SizedBox(height: 60),
