@@ -61,6 +61,10 @@ flutter:
     - assets/images/splash.flr
     - assets/images/Teddy.flr
     - assets/images/ic_logout.png
+    - assets/images/top_image_art.png
+    - assets/images/top_image_art@2x.png
+    - assets/images/top_image_art@3x.png
+
     - assets/images/ic_clock.png
     - assets/images/ic_mobile.png
     - assets/images/ic_refresh.png
