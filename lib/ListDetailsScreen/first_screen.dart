@@ -83,14 +83,17 @@ class _FirstScreenState extends State<FirstScreen> {
                 Color.fromRGBO(50, 171, 126, 1)
               ])),
         ),
-        title: Text("Device Info"),
+        title: Text(
+          "Device Info",
+          style: TextStyle(
+            fontFamily: 'Gibson',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                ),
+                icon: Image.asset("assets/images/ic_refresh.png"),
                 onPressed: () {
                   Utills.connectivityCheck(context).then((isConncted) {
                     if (isConncted != null && isConncted) {
@@ -189,10 +192,7 @@ class _FirstScreenState extends State<FirstScreen> {
               children: <Widget>[
                 (isActive == FirstScreen.USER_ACTIVE && isCurrentUser)
                     ? RaisedButton.icon(
-                        icon: Icon(
-                          Icons.phone_iphone,
-                          color: Colors.white,
-                        ),
+                        icon: Image.asset("assets/images/ic_mobile.png"),
                         color: Color.fromRGBO(2, 82, 151, 1),
                         label: Text(FirstScreen.ASK_DEVICE,
                             style:
@@ -214,10 +214,7 @@ class _FirstScreenState extends State<FirstScreen> {
                         },
                       )
                     : RaisedButton.icon(
-                        icon: Icon(
-                          Icons.phone_iphone,
-                          color: Colors.white,
-                        ),
+                        icon: Image.asset("assets/images/ic_mobile.png"),
                         label: Text(FirstScreen.ASK_DEVICE,
                             style:
                                 TextStyle(fontSize: 14.0, color: Colors.white)),
@@ -236,15 +233,21 @@ class _FirstScreenState extends State<FirstScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text("$key :",
+        Text("$key ",
             textAlign: TextAlign.left,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w400,
+                fontSize: 12.0,
+                color: Color.fromARGB(69, 69, 83, 1))),
         Text(" $value",
             textAlign: TextAlign.end,
             textDirection: TextDirection.rtl,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w700,
+                fontSize: 12.0,
+                color: Colors.black)),
       ],
     );
   }
@@ -253,21 +256,27 @@ class _FirstScreenState extends State<FirstScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text("$key :",
+        Text("$key ",
             textAlign: TextAlign.left,
             style: TextStyle(
-                fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                fontFamily: 'Gibson',
+                fontWeight: FontWeight.w700,
+                fontSize: 14.0,
+                color: Colors.black)),
         RichText(
             text: TextSpan(children: [
           WidgetSpan(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Icon(Icons.access_time),
+            child: Image.asset("assets/images/clock.png"),
           )),
           TextSpan(
               text: " $value",
               style: TextStyle(
-                  fontSize: 12.0, color: Color.fromARGB(69, 69, 83, 1))),
+                  fontFamily: 'Gibson',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.0,
+                  color: Colors.black)),
         ])),
       ],
     );
