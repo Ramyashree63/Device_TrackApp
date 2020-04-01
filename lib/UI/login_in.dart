@@ -60,22 +60,10 @@ class LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 60),
-                DecoratedBox(decoration: ShapeDecoration(shape: RoundedRectangleBorder(), color: Colors.white),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                        buttonTheme: ButtonTheme.of(context).copyWith(
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-                child: OutlineButton(
-                  splashColor: Colors.white,
-                  onPressed: () {
-                    emailValidate(context);
-                  },
-                  shape:  RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(40.0))),
+                RaisedButton(
                   color: Colors.white,
-                  highlightElevation: 0,
-                  borderSide: BorderSide(color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40.0))),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Row(
@@ -99,8 +87,9 @@ class LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                ),
-                ),
+                  onPressed: () {
+                    emailValidate(context);
+                  },
                 ),
               ],
             ),
