@@ -93,10 +93,7 @@ class _FirstScreenState extends State<FirstScreen> {
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                ),
+                icon: Image.asset("assets/images/ic_refresh.png"),
                 onPressed: () {
                   Utills.connectivityCheck(context).then((isConncted) {
                     if (isConncted != null && isConncted) {
@@ -195,10 +192,7 @@ class _FirstScreenState extends State<FirstScreen> {
               children: <Widget>[
                 (isActive == FirstScreen.USER_ACTIVE && isCurrentUser)
                     ? RaisedButton.icon(
-                        icon: Icon(
-                          Icons.phone_iphone,
-                          color: Colors.white,
-                        ),
+                        icon: Image.asset("assets/images/ic_mobile.png"),
                         color: Color.fromRGBO(2, 82, 151, 1),
                         label: Text(FirstScreen.ASK_DEVICE,
                             style:
@@ -220,10 +214,7 @@ class _FirstScreenState extends State<FirstScreen> {
                         },
                       )
                     : RaisedButton.icon(
-                        icon: Icon(
-                          Icons.phone_iphone,
-                          color: Colors.white,
-                        ),
+                        icon: Image.asset("assets/images/ic_mobile.png"),
                         label: Text(FirstScreen.ASK_DEVICE,
                             style:
                                 TextStyle(fontSize: 14.0, color: Colors.white)),
@@ -277,7 +268,7 @@ class _FirstScreenState extends State<FirstScreen> {
           WidgetSpan(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Icon(Icons.access_time),
+            child: Image.asset("assets/images/clock.png"),
           )),
           TextSpan(
               text: " $value",
