@@ -165,7 +165,7 @@ class _FirstScreenState extends State<FirstScreen> {
             SizedBox(
               height: 5,
             ),
-            buildingTopRowItem("$userName", "$mTime"),
+            buildingTopRowItem("$userName","$mTime"),
             Divider(
               color: Colors.black,
             ),
@@ -268,7 +268,8 @@ class _FirstScreenState extends State<FirstScreen> {
           WidgetSpan(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Image.asset("assets/images/clock.png"),
+            child: Image(image: AssetImage("assets/images/ic_clock.png"),
+                    width: 16,height: 16),
           )),
           TextSpan(
               text: " $value",
