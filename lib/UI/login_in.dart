@@ -37,8 +37,9 @@ class LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-//                FlutterLogo(size: 120),
-              SizedBox(height:50),
+              SizedBox(height: 20),
+              Image(image: AssetImage("assets/images/top_image_art.png"),
+              width: 250,height: 250),
                 Text(
                   "Welcome to Device Tracker",
                   textAlign: TextAlign.center,
