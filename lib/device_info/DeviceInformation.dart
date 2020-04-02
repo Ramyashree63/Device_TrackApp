@@ -78,8 +78,8 @@ class DeviceInformation {
           .set({
         OPERATING_SYSTEM: mDeviceOperatingSystem,
         VERSION: mDeviceSDKVersion,
-        MANUFACTURER: mDeviceManufacturerName,
-        MODEL: mDeviceModel,
+        MANUFACTURER: mDeviceModel,
+        MODEL: mDeviceManufacturerName,
         BATTERY_LEVEL: mBatteryLevel,
         USER_STATUS: isUserActive,
         TIME: mDateTime,
