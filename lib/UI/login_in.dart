@@ -134,8 +134,8 @@ class LoginPageState extends State<LoginPage> {
                 builder: (context) {
 //                  startServiceInPlatform();
                   DeviceInformation.userName = value.displayName;
-//                  MyApp.isUserLoggedIn = true;
-                  return FirstScreen();
+                  Utills.setPrefernce(true);
+                  return ListViewScreen();//FirstScreen();
                 },
               ),
             );

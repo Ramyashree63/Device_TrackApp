@@ -1,4 +1,5 @@
 import 'package:final_app/ListDetailsScreen/first_screen.dart';
+import 'package:final_app/Utilities/Utills.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +10,14 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool isLogIn;
+    Utills.getPrefernce().then((isLogin) {
+      isLogIn = isLogin;
+    });
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home:  LoginPage(),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        home: LoginPage()
     );
   }
 }

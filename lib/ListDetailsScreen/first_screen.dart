@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_app/Utilities/Utills.dart';
 import 'package:final_app/device_info/DeviceInformation.dart';
@@ -13,64 +15,15 @@ import 'dart:io' show Platform, sleep;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shimmer/shimmer.dart';
 
-class FirstScreen extends StatefulWidget {
-  static const USER_ACTIVE = "active";
-  static const USER_IN_ACTIVE = "in active";
-  static const LOG_OUT = "LOG OUT";
-  static const DEVICE_INFO = "Device Info";
-  static const ASK_DEVICE = "Ask for device";
+import 'ShimmerListView.dart';
 
-  @override
-  _FirstScreenState createState() => _FirstScreenState();
-}
-
-class _FirstScreenState extends State<FirstScreen> {
-  String mDeviceTocken;
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  List<DeviceDataModel> mDeviceDataList = [];
-  Firestore mFirestore = Firestore.instance;
-
-//  final List<Message> messages=[];
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    const channelName = 'com.example.google_sign_in_app';
-    var methodChannel = MethodChannel(channelName);
-    methodChannel.setMethodCallHandler(this.didRecieveTranscript);
-
-    firebaseMessagingInitialize();
-    DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
-    databaseReference
-        .child(FirstScreen.DEVICE_INFO)
-        .once()
-        .then((DataSnapshot snapShot) {
-      var keys = snapShot.value.keys;
-      var data = snapShot.value;
-      mDeviceDataList.clear();
-      for (var key in keys) {
-        mDeviceDataList.add(new DeviceDataModel(
-            data[key]["operatingSystem"],
-            data[key]["sdkVersion"],
-            data[key]["manufacturer"],
-            data[key]["model"],
-            data[key]["batteryLevel"],
-            data[key]["isActive"],
-            data[key]["time"],
-            data[key]["userName"],
-            data[key]["deviceID"],
-            data[key]["token"]));
-      }
-      mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
-      setState(() {
-        print("Length : ${mDeviceDataList.length}");
-      });
-    });
-  }
-
+class ListViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -98,7 +51,8 @@ class _FirstScreenState extends State<FirstScreen> {
                   Utills.connectivityCheck(context).then((isConncted) {
                     if (isConncted != null && isConncted) {
                       DeviceInformation().getDeviceDetails(
-                          FirstScreen.USER_ACTIVE, mDeviceTocken);
+                          FirstScreen.USER_ACTIVE,
+                          _FirstScreenState.mDeviceTocken);
                     }
                   });
                 }),
@@ -114,23 +68,153 @@ class _FirstScreenState extends State<FirstScreen> {
           ),
         ],
       ),
-      body: Container(
-        child: ListView.builder(
-            itemBuilder: (_, index) {
-              return listUI(
-                  mDeviceDataList[index].operatingSystem,
-                  mDeviceDataList[index].sdkVersion,
-                  mDeviceDataList[index].manufacturer,
-                  mDeviceDataList[index].model,
-                  mDeviceDataList[index].batteryLevel,
-                  mDeviceDataList[index].isActive,
-                  mDeviceDataList[index].time,
-                  mDeviceDataList[index].userName,
-                  mDeviceDataList[index].deviceID,
-                  mDeviceDataList[index].token);
-            },
-            itemCount: mDeviceDataList.length),
-      ),
+      body: ListView.builder(
+          itemCount: 6,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: DelayedList(), //ShimmerLayout()
+            );
+          }),
+    );
+  }
+
+  void _logOut(BuildContext context) {
+    Utills.connectivityCheck(context).then((isConncted) {
+      if (isConncted != null && isConncted) {
+        signOutGoogle();
+        clearCache();
+        DeviceInformation.deviceID = "";
+        DeviceInformation().getDeviceDetails(
+            FirstScreen.USER_IN_ACTIVE, _FirstScreenState.mDeviceTocken);
+        Utills.setPrefernce(false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return LoginPage();
+        }), ModalRoute.withName('/'));
+//        stopService(context);
+      }
+    });
+  }
+}
+
+class DelayedList extends StatefulWidget {
+  @override
+  _DelayedStateList createState() => _DelayedStateList();
+}
+
+class _DelayedStateList extends State<DelayedList> {
+  bool isLoading = true;
+
+  @override
+  Widget build(BuildContext context) {
+    List<DeviceDataModel> mDeviceDataList = [];
+    // TODO: implement build
+    DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+    databaseReference
+        .child(FirstScreen.DEVICE_INFO)
+        .once()
+        .then((DataSnapshot snapShot) {
+      var keys = snapShot.value.keys;
+      var data = snapShot.value;
+      mDeviceDataList.clear();
+      for (var key in keys) {
+        mDeviceDataList.add(new DeviceDataModel(
+            data[key]["operatingSystem"],
+            data[key]["sdkVersion"],
+            data[key]["manufacturer"],
+            data[key]["model"],
+            data[key]["batteryLevel"],
+            data[key]["isActive"],
+            data[key]["time"],
+            data[key]["userName"],
+            data[key]["deviceID"],
+            data[key]["token"]));
+      }
+      mDeviceDataList.sort((a, b) => a.time.compareTo(b.time));
+    });
+
+    Timer mTimer = Timer(Duration(seconds: 5), () {
+      setState(() {
+        isLoading = false;
+        print("Initial calling list Size : ${mDeviceDataList.length}");
+      });
+    });
+    return isLoading ? ShimmerLayout() : FirstScreen(mDeviceDataList);
+//    return  ShimmerLayout() ;
+  }
+}
+
+class FirstScreen extends StatefulWidget {
+  static const USER_ACTIVE = "active";
+  static const USER_IN_ACTIVE = "in active";
+  static const LOG_OUT = "LOG OUT";
+  static const DEVICE_INFO = "Device Info";
+  static const ASK_DEVICE = "Ask for device";
+
+  List<DeviceDataModel> mDeviceDataList = [];
+
+  FirstScreen(List<DeviceDataModel> mDeviceDataList) {
+    this.mDeviceDataList.clear();
+    this.mDeviceDataList = mDeviceDataList;
+  }
+
+  @override
+  _FirstScreenState createState() => _FirstScreenState(mDeviceDataList);
+}
+
+class _FirstScreenState extends State<FirstScreen> {
+  List<DeviceDataModel> mDeviceDataList = [];
+
+  _FirstScreenState(List<DeviceDataModel> mDeviceDataList) {
+    this.mDeviceDataList.clear();
+    this.mDeviceDataList = mDeviceDataList;
+  }
+
+//  int valu = value;
+
+  static String mDeviceTocken;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  Firestore mFirestore = Firestore.instance;
+
+//  final List<Message> messages=[];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    /*const channelName = 'com.example.google_sign_in_app';
+    var methodChannel = MethodChannel(channelName);
+    methodChannel.setMethodCallHandler(this.didRecieveTranscript);*/
+
+    firebaseMessagingInitialize();
+
+    setState(() {
+      print("Final list data count  Length : ${mDeviceDataList.length}");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemBuilder: (_, index) {
+            return listUI(
+                mDeviceDataList[index].operatingSystem,
+                mDeviceDataList[index].sdkVersion,
+                mDeviceDataList[index].manufacturer,
+                mDeviceDataList[index].model,
+                mDeviceDataList[index].batteryLevel,
+                mDeviceDataList[index].isActive,
+                mDeviceDataList[index].time,
+                mDeviceDataList[index].userName,
+                mDeviceDataList[index].deviceID,
+                mDeviceDataList[index].token);
+          },
+          itemCount: mDeviceDataList.length),
     );
   }
 
@@ -165,7 +249,7 @@ class _FirstScreenState extends State<FirstScreen> {
             SizedBox(
               height: 5,
             ),
-            buildingTopRowItem("$userName","$mTime"),
+            buildingTopRowItem("$userName", "$mTime"),
             Divider(
               color: Colors.black,
             ),
@@ -268,8 +352,10 @@ class _FirstScreenState extends State<FirstScreen> {
           WidgetSpan(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Image(image: AssetImage("assets/images/ic_clock.png"),
-                    width: 16,height: 16),
+            child: Image(
+                image: AssetImage("assets/images/ic_clock.png"),
+                width: 16,
+                height: 16),
           )),
           TextSpan(
               text: " $value",
@@ -300,24 +386,6 @@ class _FirstScreenState extends State<FirstScreen> {
         );
       }
     } else if (Platform.isIOS) {}
-  }
-
-  void _logOut(BuildContext context) {
-    Utills.connectivityCheck(context).then((isConncted) {
-      if (isConncted != null && isConncted) {
-//        MyApp.isUserLoggedIn = false;
-        signOutGoogle();
-        clearCache();
-        DeviceInformation.deviceID = "";
-        DeviceInformation()
-            .getDeviceDetails(FirstScreen.USER_IN_ACTIVE, mDeviceTocken);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return LoginPage();
-        }), ModalRoute.withName('/'));
-        stopService(context);
-      }
-    });
   }
 
   Future<void> didRecieveTranscript(MethodCall call) async {
