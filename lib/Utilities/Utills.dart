@@ -51,22 +51,17 @@ class Utills {
     ));
   }
 
+  static SharedPreferences _sharedPreferences;
+
   static void setPrefernce(bool isLogIn) async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-
+    _sharedPreferences = await SharedPreferences.getInstance();
     await _sharedPreferences.setBool("User_Log_In", isLogIn);
-
     print("login set the boolean ");
   }
 
   static Future<bool> getPrefernce() async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-
-    return _sharedPreferences.getBool("User_Log_In");
-
-
-    print("login get the boolean ");
+    _sharedPreferences = await SharedPreferences.getInstance();
+//    print("login get the boolean ");
+    return _sharedPreferences.getBool("User_Log_In")??true;
   }
 }
