@@ -34,6 +34,10 @@
           <option name="url" value="https://github.com/alfianlosari/flutter_qr_code_scanner_generator_sharing.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/iampawan/FlutterQRScanner-App.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="$USER_HOME$/Desktop" />
