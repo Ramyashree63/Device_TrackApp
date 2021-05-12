@@ -46,6 +46,10 @@
           <option name="url" value="https://github.com/pdliuw/ai_barcode_DEMO.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/IshanFx/Flutter-Samples.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="$USER_HOME$/Desktop" />
